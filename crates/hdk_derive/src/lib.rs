@@ -1,8 +1,10 @@
 #![crate_type = "proc-macro"]
-extern crate proc_macro;
+
 use proc_macro::TokenStream;
 use quote::TokenStreamExt;
-use syn::parse::{Parse, ParseStream, Result};
+use syn::parse::Parse;
+use syn::parse::ParseStream;
+use syn::parse::Result;
 use syn::punctuated::Punctuated;
 
 struct EntryDef(holochain_zome_types::entry_def::EntryDef);
@@ -10,6 +12,7 @@ struct EntryDefId(holochain_zome_types::entry_def::EntryDefId);
 struct EntryVisibility(holochain_zome_types::entry_def::EntryVisibility);
 struct CrdtType(holochain_zome_types::crdt::CrdtType);
 struct RequiredValidations(holochain_zome_types::entry_def::RequiredValidations);
+struct RequiredValidationType(holochain_zome_types::validate::RequiredValidationType);
 
 impl Parse for EntryDef {
     fn parse(input: ParseStream) -> Result<Self> {
@@ -18,6 +21,8 @@ impl Parse for EntryDef {
             holochain_zome_types::entry_def::RequiredValidations::default();
         let mut visibility = holochain_zome_types::entry_def::EntryVisibility::default();
         let crdt_type = holochain_zome_types::crdt::CrdtType::default();
+        let mut required_validation_type =
+            holochain_zome_types::validate::RequiredValidationType::default();
 
         let vars = Punctuated::<syn::MetaNameValue, syn::Token![,]>::parse_terminated(input)?;
         for var in vars {
@@ -40,6 +45,30 @@ impl Parse for EntryDef {
                         }
                         _ => unreachable!(),
                     },
+                    "required_validation_type" => {
+                        match var.lit {
+                            syn::Lit::Str(s) => required_validation_type = match s.value().as_str()
+                            {
+                                "custom" => {
+                                    holochain_zome_types::validate::RequiredValidationType::Custom
+                                }
+                                "element" => {
+                                    holochain_zome_types::validate::RequiredValidationType::Element
+                                }
+                                "sub_chain" => {
+                                    holochain_zome_types::validate::RequiredValidationType::SubChain
+                                }
+                                "full" => {
+                                    holochain_zome_types::validate::RequiredValidationType::Full
+                                }
+                                _ => unreachable!(
+                                    "Invalid required_validation_type
+                                    Options are: entry, sub_chain, full and custom"
+                                ),
+                            },
+                            _ => unreachable!(),
+                        };
+                    }
                     "visibility" => {
                         match var.lit {
                             syn::Lit::Str(s) => {
@@ -68,6 +97,7 @@ impl Parse for EntryDef {
             required_validations,
             visibility,
             crdt_type,
+            required_validation_type,
         }))
     }
 }
@@ -117,12 +147,30 @@ impl quote::ToTokens for EntryVisibility {
     }
 }
 
+impl quote::ToTokens for RequiredValidationType {
+    fn to_tokens(&self, tokens: &mut proc_macro2::TokenStream) {
+        let variant = syn::Ident::new(
+            match self.0 {
+                holochain_zome_types::validate::RequiredValidationType::Custom => "Custom",
+                holochain_zome_types::validate::RequiredValidationType::Element => "Element",
+                holochain_zome_types::validate::RequiredValidationType::SubChain => "SubChain",
+                holochain_zome_types::validate::RequiredValidationType::Full => "Full",
+            },
+            proc_macro2::Span::call_site(),
+        );
+        tokens.append_all(quote::quote! {
+            hdk3::prelude::RequiredValidationType::#variant
+        });
+    }
+}
+
 impl quote::ToTokens for EntryDef {
     fn to_tokens(&self, tokens: &mut proc_macro2::TokenStream) {
         let id = EntryDefId(self.0.id.clone());
         let visibility = EntryVisibility(self.0.visibility);
         let crdt_type = CrdtType(self.0.crdt_type);
         let required_validations = RequiredValidations(self.0.required_validations);
+        let required_validation_type = RequiredValidationType(self.0.required_validation_type);
 
         tokens.append_all(quote::quote! {
             hdk3::prelude::EntryDef {
@@ -130,6 +178,7 @@ impl quote::ToTokens for EntryDef {
                 visibility: #visibility,
                 crdt_type: #crdt_type,
                 required_validations: #required_validations,
+                required_validation_type: #required_validation_type,
             }
         });
     }
@@ -147,7 +196,7 @@ pub fn hdk_entry(attrs: TokenStream, code: TokenStream) -> TokenStream {
     let entry_def = syn::parse_macro_input!(attrs as EntryDef);
 
     (quote::quote! {
-        #[derive(serde::Serialize, serde::Deserialize, hdk3::prelude::SerializedBytes)]
+        #[derive(serde::Serialize, serde::Deserialize, hdk3::prelude::SerializedBytes, std::fmt::Debug)]
         #item
         hdk3::prelude::entry_def!(#struct_ident #entry_def);
     })
@@ -157,42 +206,26 @@ pub fn hdk_entry(attrs: TokenStream, code: TokenStream) -> TokenStream {
 #[proc_macro_attribute]
 pub fn hdk_extern(_attrs: TokenStream, item: TokenStream) -> TokenStream {
     // extern mapping is only valid for functions
-    // let mut item_fn: syn::ItemFn = syn::parse(item).unwrap();
-    let mut item_fn = syn::parse_macro_input!(item as syn::ItemFn);
+    let item_fn = syn::parse_macro_input!(item as syn::ItemFn);
 
     // extract the ident of the fn
     // this will be exposed as the external facing extern
     let external_fn_ident = item_fn.sig.ident.clone();
+    let input_type = if let Some(syn::FnArg::Typed(pat_type)) = item_fn.sig.inputs.first() {
+        pat_type.ty.clone()
+    } else {
+        unreachable!();
+    };
+    let output_type = if let syn::ReturnType::Type(_, ref ty) = item_fn.sig.output {
+        ty.clone()
+    } else {
+        unreachable!();
+    };
 
-    // build a new internal fn ident that is compatible with map_extern!
-    // this needs to be sufficiently unlikely to have namespace collisions with other fns
-    //
-    // @todo can we do this by wrapping the external facing extern in an inner module with the
-    // crazy name rather than the function itself getting a weird name??
-    // e.g. something like this:
-    // ```rust
-    // pub fn foo ( .. ) -> ExternResult< .. > {
-    //  // .. do stuff
-    // }
-    // pub mod foo_hdk_extern_mod {
-    // // does the no_mangle + extern hoist this out of the mod scope from the host's perspective?
-    //  #[no_mangle]
-    //  pub extern "C" foo (ptr: GuestPtr) -> GuestPtr {
-    //   // .. boilerplate
-    //  }
-    // }
-    // ```
-    let internal_fn_ident = syn::Ident::new(
-        &format!("{}_hdk_extern", external_fn_ident.to_string()),
-        item_fn.sig.ident.span(),
-    );
+    let internal_fn_ident = external_fn_ident.clone();
 
-    // replace the ident in-place with the new internal ident
-    item_fn.sig.ident = internal_fn_ident.clone();
-
-    // add a map_extern! and include the modified item_fn
     (quote::quote! {
-        map_extern!(#external_fn_ident, #internal_fn_ident);
+        map_extern!(#external_fn_ident, #internal_fn_ident, #input_type, #output_type);
         #item_fn
     })
     .into()
