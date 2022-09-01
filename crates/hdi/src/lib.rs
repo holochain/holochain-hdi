@@ -1,4 +1,138 @@
-//! The Holochain Deterministic Integrity
+//! Holochain Deterministic Integrity (HDI) is Holochain's data model and integrity toolset for
+//! writing zomes.
+//!
+//! The logic of a Holochain DNA can be divided into two parts: integrity and coordination.
+//! Integrity is the part of the hApp that defines the data types and validates data
+//! manipulations. Coordination encompasses the domain logic and implements the functions
+//! that manipulate data.
+//!
+//! # Examples
+//!
+//! An example of an integrity zome with data definition and data validation can be found in the
+//! wasm workspace of the Holochain repository:
+//! <https://github.com/holochain/holochain/blob/develop/crates/test_utils/wasm/wasm_workspace/integrity_zome/src/lib.rs>.
+//!
+//! # Data definition
+//!
+//! The DNA's data model is defined in integrity zomes. They comprise all data type definitions
+//! as well as relationships between those types. Integrity zomes are purely definitions and do
+//! not contain functions to manipulate the data. Therefore a hApp's data model is encapsulated
+//! and completely independent of the domain logic, which is encoded in coordinator zomes.
+//!
+//! The MVC (model, view, controller) design pattern can be used as an analogy. **The
+//! application’s integrity zomes comprise its model layer** — everything that defines the shape
+//! of the data. In practice, this means three things:
+//! - entry type definitions
+//! - link type definitions
+//! - a validation callback that constrains the kinds of data that can validly be called entries
+//! and links of those types (see also [`validate`](prelude::validate)).
+//!
+//! **The coordination zomes comprise the application's controller layer** — the code that actually
+//! writes and retrieves data, handles countersigning sessions and sends and receives messages
+//! between peers or between a cell and its UI. In other words, all the zome functions, `init`
+//! functions, remote signal receivers, and scheduler callbacks will all live in coordinator zomes.
+//!
+//! Advantages of this approach are:
+//! * The DNA hash is constant as long as the integrity zomes remain the same. The peer network of
+//! a DNA is tied to its hash. Changes to the DNA hash result in a new peer network. Changes to the
+//! domain logic enclosed in coordinator zomes, however, do not affect the DNA hash. Hence the DNAs
+//! and therefore hApps can be modified without creating a new peer network on every
+//! deployment.
+//! * Integrity zomes can be shared among DNAs. Any coordinator zome can import an integrity
+//! zome's data types and implement functions for data manipulation. This composability of
+//! integrity and coordinator zomes allows for a multitude of permutations with shared integrity
+//! zomes, i. e. a shared data model.
+//!
+//! # Data validation
+//!
+//! The second fundamental part of integrity zomes is data validation. For every [operation](holochain_integrity_types::Op)
+//! that can be performed on the data, a validation rule can be specified. Both data types and data
+//! values can be validated. All of these validation rules are written in a central callback
+//! which is called by the Holochain engine for each operation.
+//!
+//! There's a helper type called [`OpType`](holochain_integrity_types::OpType) available for easy
+//! access to all link and entry variants when validating an operation. In many cases, this type can
+//! be easier to work with than the bare [`Op`](holochain_integrity_types::Op), which contains the
+//! same information as `OpType`, but the former has a flatter data structure, whereas the latter has
+//! a deeply nested structure.
+//!
+//! ```
+//! # #[cfg(not(feature = "test_utils"))]
+//! # fn main() -> Result<(), Box<dyn std::error::Error>> {
+//! # Ok(())
+//! # }
+//! # #[cfg(feature = "test_utils")]
+//! # fn main() -> Result<(), Box<dyn std::error::Error>> {
+//! # use hdi::prelude::*;
+//! # #[hdk_entry_helper]
+//! # pub struct A;
+//! # #[hdk_entry_helper]
+//! # pub struct B;
+//! # #[hdk_entry_defs(skip_hdk_extern = true)]
+//! # #[unit_enum(UnitEntryTypes)]
+//! # pub enum EntryTypes {
+//! #     A(A),
+//! #     B(B),
+//! # }
+//! # #[hdk_link_types(skip_no_mangle = true)]
+//! # pub enum LinkTypes {
+//! #   A,
+//! #   B,
+//! # }
+//! # let op = holochain_integrity_types::Op::RegisterCreateLink(
+//! # holochain_integrity_types::RegisterCreateLink {
+//! #     create_link: holochain_integrity_types::SignedHashed {
+//! #         hashed: holo_hash::HoloHashed {
+//! #             content: holochain_integrity_types::CreateLink {
+//! #                 author: AgentPubKey::from_raw_36(vec![0u8; 36]),
+//! #                 timestamp: Timestamp(0),
+//! #                 action_seq: 1,
+//! #                 prev_action: ActionHash::from_raw_36(vec![0u8; 36]),
+//! #                 base_address: EntryHash::from_raw_36(vec![0u8; 36]).into(),
+//! #                 target_address: EntryHash::from_raw_36(vec![0u8; 36]).into(),
+//! #                 zome_id: 0.into(),
+//! #                 link_type: 0.into(),
+//! #                 tag: ().into(),
+//! #                 weight: Default::default(),
+//! #             },
+//! #             hash: ActionHash::from_raw_36(vec![0u8; 36]),
+//! #         },
+//! #         signature: Signature([0u8; 64]),
+//! #     },
+//! # },
+//! # );
+//! # #[cfg(feature = "test_utils")]
+//! # hdi::test_utils::set_zome_types(&[(0, 2)], &[(0, 2)]);
+//! # let result: Result<hdi::prelude::ValidateCallbackResult, Box<dyn std::error::Error>> =
+//! match op.to_type()? {
+//!     OpType::StoreEntry(OpEntry::CreateEntry { entry_type, .. }) => match entry_type {
+//!         EntryTypes::A(_) => Ok(ValidateCallbackResult::Valid),
+//!         EntryTypes::B(_) => Ok(ValidateCallbackResult::Invalid(
+//!             "No Bs allowed in this app".to_string(),
+//!         )),
+//!     },
+//!     OpType::RegisterCreateLink {
+//!         base_address: _,
+//!         target_address: _,
+//!         tag: _,
+//!         link_type,
+//!     } => match link_type {
+//!         LinkTypes::A => Ok(ValidateCallbackResult::Valid),
+//!         LinkTypes::B => Ok(ValidateCallbackResult::Invalid(
+//!             "No Bs allowed in this app".to_string(),
+//!         )),
+//!     },
+//!     _ => Ok(ValidateCallbackResult::Valid),
+//! };
+//! # Ok(())
+//! # }
+//! ```
+//! See an example of the `validate` callback in an integrity zome in the WASM workspace:
+//! <https://github.com/holochain/holochain/blob/develop/crates/test_utils/wasm/wasm_workspace/validate/src/integrity.rs>.
+//! Many more validation examples can be browsed in that very workspace.
+
+/// Current HDI rust crate version.
+pub const HDI_VERSION: &str = env!("CARGO_PKG_VERSION");
 
 pub use hdk_derive::hdk_entry_defs;
 pub use hdk_derive::hdk_entry_helper;
@@ -10,7 +144,17 @@ pub use hdk_derive::hdk_link_types;
 /// Most Holochain applications will define their own app entry types.
 ///
 /// App entries are all entries that are not system entries.
-/// They are defined in the `entry_defs` callback and then the application can call CRUD functions with them.
+/// Definitions of entry types belong in the integrity zomes of a DNA. In contrast, operations
+/// for manipulating entries go into coordinator zomes.
+///
+/// # Examples
+///
+/// Refer to the WASM workspace in the Holochain repository for examples.
+/// Here's a simple example of an entry definition:
+/// <https://github.com/holochain/holochain/blob/develop/crates/test_utils/wasm/wasm_workspace/entry_defs/src/integrity.rs>
+///
+/// An example of a coordinator zome with functions to manipulate entries:
+/// <https://github.com/holochain/holochain/blob/develop/crates/test_utils/wasm/wasm_workspace/coordinator_zome/src/lib.rs>
 ///
 /// CRUD in Holochain is represented as a graph/tree of Records referencing each other (via Action hashes) representing new states of a shared identity.
 /// Because the network is always subject to the possibility of partitions, there is no way to assert an objective truth about the 'current' or 'real' value that all participants will agree on.
@@ -131,3 +275,11 @@ pub mod trace;
 pub mod hdi;
 
 pub mod link;
+
+pub mod chain;
+
+#[deny(missing_docs)]
+pub mod op;
+
+#[cfg(any(feature = "test_utils", test))]
+pub mod test_utils;

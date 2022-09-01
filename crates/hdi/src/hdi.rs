@@ -32,6 +32,10 @@ pub trait HdiT: Send + Sync {
         &self,
         must_get_valid_record_input: MustGetValidRecordInput,
     ) -> ExternResult<Record>;
+    fn must_get_agent_activity(
+        &self,
+        must_get_agent_activity_input: MustGetAgentActivityInput,
+    ) -> ExternResult<Vec<RegisterAgentActivity>>;
     // Info
     fn dna_info(&self, dna_info_input: ()) -> ExternResult<DnaInfo>;
     fn zome_info(&self, zome_info_input: ()) -> ExternResult<ZomeInfo>;
@@ -77,6 +81,12 @@ impl HdiT for ErrHdi {
     fn must_get_valid_record(&self, _: MustGetValidRecordInput) -> ExternResult<Record> {
         Self::err()
     }
+    fn must_get_agent_activity(
+        &self,
+        _: MustGetAgentActivityInput,
+    ) -> ExternResult<Vec<RegisterAgentActivity>> {
+        Self::err()
+    }
     fn dna_info(&self, _: ()) -> ExternResult<DnaInfo> {
         Self::err()
     }
@@ -110,10 +120,10 @@ impl HostHdi {
     }
 }
 
-/// The real holochain_deterministic_integrity implements `host_call` for every holochain_deterministic_integrity function.
+/// The real hdi implements `host_call` for every hdi function.
 /// This is deferring to the standard `holochain_wasmer_guest` crate functionality.
 /// Every function works exactly the same way with the same basic signatures and patterns.
-/// Elsewhere in the holochain_deterministic_integrity are more high level wrappers around this basic trait.
+/// Elsewhere in the hdi are more high level wrappers around this basic trait.
 #[cfg(all(not(feature = "mock"), target_arch = "wasm32"))]
 impl HdiT for HostHdi {
     fn verify_signature(&self, verify_signature: VerifySignature) -> ExternResult<bool> {
@@ -141,6 +151,15 @@ impl HdiT for HostHdi {
         host_call::<MustGetValidRecordInput, Record>(
             __must_get_valid_record,
             must_get_valid_record_input,
+        )
+    }
+    fn must_get_agent_activity(
+        &self,
+        must_get_agent_activity_input: MustGetAgentActivityInput,
+    ) -> ExternResult<Vec<RegisterAgentActivity>> {
+        host_call::<MustGetAgentActivityInput, Vec<RegisterAgentActivity>>(
+            __must_get_agent_activity,
+            must_get_agent_activity_input,
         )
     }
     fn dna_info(&self, _: ()) -> ExternResult<DnaInfo> {
