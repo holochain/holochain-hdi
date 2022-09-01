@@ -1,7 +1,7 @@
 //! # Examples
 //!
 //! ```
-//! use holochain_deterministic_integrity::prelude::*;
+//! use hdi::prelude::*;
 //! #[hdk_entry_helper]
 //! pub struct Post(pub String);
 //! #[hdk_entry_helper]
@@ -21,12 +21,11 @@
 //! }
 //! # fn main() {
 //! assert_eq!(__num_entry_types(), 3);
-//! assert_eq!(LocalZomeTypeId::from(UnitEntryTypes::Post), LocalZomeTypeId(0));
 //! # }
 //! ```
 
-use self::holochain_deterministic_integrity::prelude::*;
-use crate as holochain_deterministic_integrity;
+use self::hdi::prelude::*;
+use crate as hdi;
 
 #[hdk_entry_helper]
 pub struct Post(pub String);

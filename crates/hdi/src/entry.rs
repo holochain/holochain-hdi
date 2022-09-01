@@ -109,22 +109,6 @@ pub fn must_get_valid_record(action_hash: ActionHash) -> ExternResult<Record> {
     })
 }
 
-/// Helper trait for deserializing [`Entry`]s to the correct type.
-///
-/// This is implemented by the [`hdk_entry_defs`] proc_macro.
-pub trait EntryTypesHelper: Sized {
-    /// Check if the [`LocalZomeTypeId`] matches one of the Self [`LocalZomeTypeId`]'s and if
-    /// it does deserialize the [`Entry`] into that types.
-    fn try_from_local_type<I>(type_index: I, entry: &Entry) -> Result<Option<Self>, WasmError>
-    where
-        LocalZomeTypeId: From<I>;
-    /// Check if the [`GlobalZomeTypeId`] maps to a [`LocalZomeTypeId`] declared by Self and if
-    /// it does deserialize the [`Entry`] into that types.
-    fn try_from_global_type<I>(type_index: I, entry: &Entry) -> Result<Option<Self>, WasmError>
-    where
-        GlobalZomeTypeId: From<I>;
-}
-
 /// Implements conversion traits to allow a struct to be handled as an app entry.
 /// If you have some need to implement custom serialization logic or metadata injection
 /// you can do so by implementing these traits manually instead.
