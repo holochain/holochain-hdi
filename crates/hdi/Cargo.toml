@@ -12,9 +12,7 @@ edition = "2021"
 
 [dependencies]
 hdk_derive = { workspace = true }
-holo_hash = { workspace = true, features = [
-  "hashing",
-] }
+holo_hash = { workspace = true, features = ["hashing"] }
 holochain_wasmer_guest = "=0.0.103"
 holochain_serialized_bytes = "=0.0.57"
 holochain_serialized_bytes_derive = "=0.0.57"
@@ -31,7 +29,7 @@ mockall = { version = "0.13", optional = true }
 # When building for the WASM target, we need to configure getrandom
 # to use the host system for the source of crypto-secure randomness.
 [target.'cfg(all(target_arch = "wasm32", target_os = "unknown"))'.dependencies]
-getrandom = { version = "0.3" }
+getrandom = { version = "0.3", features = ["wasm_js"] }
 
 [dev-dependencies]
 hdi = { path = ".", features = ["test_utils"] }

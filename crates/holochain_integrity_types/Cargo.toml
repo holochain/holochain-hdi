@@ -9,9 +9,7 @@ authors = ["Holochain Core Dev Team <devcore@holochain.org>"]
 edition = "2021"
 
 [dependencies]
-holo_hash = { workspace = true, features = [
-  "encoding",
-] }
+holo_hash = { workspace = true, features = ["encoding"] }
 holochain_serialized_bytes = "=0.0.57"
 holochain_util = { workspace = true }
 holochain_secure_primitive = { workspace = true }
