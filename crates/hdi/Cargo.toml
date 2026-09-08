@@ -24,7 +24,7 @@ serde = "1.0"
 serde_bytes = "0.11"
 tracing = { version = "0.1", optional = true }
 tracing-core = { version = "0.1", optional = true }
-mockall = { version = "0.13", optional = true }
+mockall = { version = "0.15", optional = true }
 
 # When building for the WASM target, we need to configure getrandom
 # to use the host system for the source of crypto-secure randomness.
