@@ -1,16 +1,15 @@
 [package]
 name = "fixt"
-version = "0.8.0-dev.0"
+version.workspace = true
 description = "minimum viable fixtures"
 license = "Apache-2.0"
-repository = "https://github.com/holochain/holochain"
+repository.workspace = true
 documentation = "https://docs.rs/fixt"
 authors = ["Holochain Core Dev Team <devcore@holochain.org>"]
 keywords = ["holochain", "holo", "test", "fixture"]
 categories = ["development-tools::testing"]
 edition = "2021"
 
-# reminder - do not use workspace deps
 [dependencies]
 holochain_serialized_bytes = "=0.0.57"
 lazy_static = "1.4"

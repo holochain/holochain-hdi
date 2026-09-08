@@ -1,0 +1,60 @@
+[workspace]
+members = [
+  "crates/fixt",
+  "crates/fixt/test",
+  "crates/hdi",
+  "crates/hdk_derive",
+  "crates/holo_hash",
+  "crates/holochain_integrity_types",
+  "crates/holochain_secure_primitive",
+  "crates/holochain_util",
+  "crates/timestamp",
+]
+
+resolver = "2"
+
+[workspace.package]
+version = "0.9.0-dev.3"
+authors = ["Holochain Core Dev Team <devcore@holochain.org>"]
+homepage = "https://www.holochain.org/"
+repository = "https://github.com/holochain/holochain-hdi"
+edition = "2021"
+
+[workspace.dependencies]
+# Workspace crates. `default-features = false` is declared here for every
+# crate that at least one member consumes without default features, because
+# cargo ignores `default-features = false` on a member when the workspace
+# entry does not declare it. Members that want the defaults say
+# `default-features = true` explicitly.
+fixt = { version = "0.9.0-dev.3", path = "crates/fixt" }
+hdk_derive = { version = "0.9.0-dev.3", path = "crates/hdk_derive" }
+holo_hash = { version = "0.9.0-dev.3", path = "crates/holo_hash" }
+holochain_integrity_types = { version = "0.9.0-dev.3", path = "crates/holochain_integrity_types", default-features = false }
+holochain_secure_primitive = { version = "0.9.0-dev.3", path = "crates/holochain_secure_primitive" }
+holochain_timestamp = { version = "0.9.0-dev.3", path = "crates/timestamp", default-features = false }
+holochain_util = { version = "0.9.0-dev.3", path = "crates/holochain_util", default-features = false }
+
+[workspace.lints.clippy]
+nursery = { level = "allow", priority = -1 }
+cargo = { level = "allow", priority = -1 }
+pedantic = { level = "allow", priority = -1 }
+restriction = { level = "allow", priority = -1 }
+style = "deny"
+complexity = "deny"
+perf = "deny"
+correctness = "deny"
+dbg_macro = "deny"
+
+[profile.dev]
+debug = 1
+
+[profile.dev.package."*"]
+opt-level = 2
+debug = 0
+debug-assertions = false
+overflow-checks = false
+incremental = false
+codegen-units = 16
+
+[profile.release]
+opt-level = "z"

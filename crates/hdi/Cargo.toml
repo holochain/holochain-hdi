@@ -1,27 +1,26 @@
 [package]
 name = "hdi"
-version = "0.9.0-dev.3"
+version.workspace = true
 description = "The HDI"
 license = "CAL-1.0"
-repository = "https://github.com/holochain/holochain/tree/develop/crates/hdi"
+repository.workspace = true
 documentation = "https://docs.rs/hdi"
 authors = ["Holochain Core Dev Team <devcore@holochain.org>"]
 keywords = ["holochain", "holo", "integrity"]
 categories = ["cryptography"]
 edition = "2021"
 
-# reminder - do not use workspace deps
 [dependencies]
-hdk_derive = { version = "^0.8.0-dev.3", path = "../hdk_derive" }
-holo_hash = { version = "^0.8.0-dev.2", features = [
+hdk_derive = { workspace = true }
+holo_hash = { workspace = true, features = [
   "hashing",
-], path = "../holo_hash" }
+] }
 holochain_wasmer_guest = "=0.0.103"
 holochain_serialized_bytes = "=0.0.57"
 holochain_serialized_bytes_derive = "=0.0.57"
 # it's important that we depend on holochain_integrity_types with no default
 # features, both here AND in hdk_derive, to reduce code bloat
-holochain_integrity_types = { version = "^0.8.0-dev.3", path = "../holochain_integrity_types", default-features = false }
+holochain_integrity_types = { workspace = true }
 paste = "1.0"
 serde = "1.0"
 serde_bytes = "0.11"
@@ -36,7 +35,7 @@ getrandom = { version = "0.3" }
 
 [dev-dependencies]
 hdi = { path = ".", features = ["test_utils"] }
-fixt = { path = "../fixt" }
+fixt = { workspace = true }
 test-case = "3.3"
 
 [lints]
