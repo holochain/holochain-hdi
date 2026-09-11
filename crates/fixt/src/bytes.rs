@@ -1,5 +1,4 @@
 use crate::prelude::*;
-use rand::Rng;
 
 const UNPREDICTABLE_MIN_LEN: usize = 0;
 const UNPREDICTABLE_MAX_LEN: usize = 32;

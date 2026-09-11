@@ -1,5 +1,4 @@
 use crate::prelude::*;
-use rand::Rng;
 
 pub const EMPTY_CHAR: char = '\u{0000}';
 pub const PREDICTABLE_CHARS: &str = "💯❤💩.!foobarbaz!.💩❤💯";
