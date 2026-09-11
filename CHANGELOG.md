@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## \[[0.9.0-dev.6](https://github.com/holochain/holochain-hdi/compare/v0.9.0-dev.5...v0.9.0-dev.6)\] - 2026-09-11
+
+### Miscellaneous Tasks
+
+- *(holo_hash)* Upgrade kitsune2_api to v0.6 by @jost-s in [#14](https://github.com/holochain/holochain-hdi/pull/14)
+
 ## \[[0.9.0-dev.5](https://github.com/holochain/holochain-hdi/compare/v0.9.0-dev.4...v0.9.0-dev.5)\] - 2026-09-11
 
 ### Miscellaneous Tasks
