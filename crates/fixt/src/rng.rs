@@ -8,8 +8,8 @@
 
 use parking_lot::Mutex;
 use rand::rngs::StdRng;
-use rand::RngCore;
-use rand::SeedableRng;
+use rand::{SeedableRng, TryRng};
+use std::convert::Infallible;
 use std::sync::Arc;
 
 lazy_static::lazy_static! {
@@ -34,17 +34,19 @@ lazy_static::lazy_static! {
 #[derive(Clone)]
 pub struct FixtRng(Arc<Mutex<StdRng>>);
 
-impl RngCore for FixtRng {
-    fn next_u32(&mut self) -> u32 {
-        self.0.lock().next_u32()
+impl TryRng for FixtRng {
+    type Error = Infallible;
+
+    fn try_next_u32(&mut self) -> Result<u32, Self::Error> {
+        self.0.lock().try_next_u32()
     }
 
-    fn next_u64(&mut self) -> u64 {
-        self.0.lock().next_u64()
+    fn try_next_u64(&mut self) -> Result<u64, Self::Error> {
+        self.0.lock().try_next_u64()
     }
 
-    fn fill_bytes(&mut self, dest: &mut [u8]) {
-        self.0.lock().fill_bytes(dest)
+    fn try_fill_bytes(&mut self, dst: &mut [u8]) -> Result<(), Self::Error> {
+        self.0.lock().try_fill_bytes(dst)
     }
 }
 
