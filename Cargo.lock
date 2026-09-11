@@ -487,7 +487,7 @@ checksum = "3e0f1c7c3a72c66fd80abe965175f7523475c0489a87d3ff9d6e8c87d87a9d2d"
 
 [[package]]
 name = "fixt"
-version = "0.9.0-dev.4"
+version = "0.9.0-dev.5"
 dependencies = [
  "holochain_serialized_bytes",
  "lazy_static",
@@ -501,7 +501,7 @@ dependencies = [
 
 [[package]]
 name = "fixt_test"
-version = "0.9.0-dev.4"
+version = "0.9.0-dev.5"
 dependencies = [
  "fixt",
  "paste",
@@ -691,7 +691,7 @@ checksum = "ed5909b6e89a2db4456e54cd5f673791d7eca6732202bbf2a9cc504fe2f9b84a"
 
 [[package]]
 name = "hdi"
-version = "0.9.0-dev.4"
+version = "0.9.0-dev.5"
 dependencies = [
  "fixt",
  "getrandom 0.3.4",
@@ -713,7 +713,7 @@ dependencies = [
 
 [[package]]
 name = "hdk_derive"
-version = "0.9.0-dev.4"
+version = "0.9.0-dev.5"
 dependencies = [
  "darling 0.24.1",
  "heck",
@@ -734,7 +734,7 @@ checksum = "2304e00983f87ffb38b55b444b5e3b60a884b5d30c0fca7d82fe33449bbe55ea"
 
 [[package]]
 name = "holo_hash"
-version = "0.9.0-dev.4"
+version = "0.9.0-dev.5"
 dependencies = [
  "base64 0.23.1",
  "blake2b_simd",
@@ -761,7 +761,7 @@ dependencies = [
 
 [[package]]
 name = "holochain_integrity_types"
-version = "0.9.0-dev.4"
+version = "0.9.0-dev.5"
 dependencies = [
  "derive_builder",
  "fixt",
@@ -785,7 +785,7 @@ dependencies = [
 
 [[package]]
 name = "holochain_secure_primitive"
-version = "0.9.0-dev.4"
+version = "0.9.0-dev.5"
 dependencies = [
  "paste",
  "serde",
@@ -822,7 +822,7 @@ dependencies = [
 
 [[package]]
 name = "holochain_timestamp"
-version = "0.9.0-dev.4"
+version = "0.9.0-dev.5"
 dependencies = [
  "chrono",
  "holochain_serialized_bytes",
@@ -832,7 +832,7 @@ dependencies = [
 
 [[package]]
 name = "holochain_util"
-version = "0.9.0-dev.4"
+version = "0.9.0-dev.5"
 dependencies = [
  "backtrace",
  "cfg-if",

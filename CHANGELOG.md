@@ -4,6 +4,26 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## \[[0.9.0-dev.5](https://github.com/holochain/holochain-hdi/compare/v0.9.0-dev.4...v0.9.0-dev.5)\] - 2026-09-11
+
+### Miscellaneous Tasks
+
+- Upgrade schemars to v1.2 by @jost-s in [#12](https://github.com/holochain/holochain-hdi/pull/12)
+
+### Automated Changes
+
+- *(deps)* Bump syn from 2.0.119 to 3.0.5 by @dependabot[bot] in [#8](https://github.com/holochain/holochain-hdi/pull/8)
+- *(deps)* Bump rand from 0.9.5 to 0.10.2 by @dependabot[bot] in [#7](https://github.com/holochain/holochain-hdi/pull/7)
+- *(deps)* Bump sha2 from 0.10.9 to 0.11.0 by @dependabot[bot] in [#10](https://github.com/holochain/holochain-hdi/pull/10)
+- *(deps)* Bump base64 from 0.22.1 to 0.23.1 by @dependabot[bot] in [#9](https://github.com/holochain/holochain-hdi/pull/9)
+- *(deps)* Bump mockall from 0.13.1 to 0.15.0 by @dependabot[bot] in [#6](https://github.com/holochain/holochain-hdi/pull/6)
+- *(deps)* Bump Swatinem/rust-cache by @dependabot[bot] in [#5](https://github.com/holochain/holochain-hdi/pull/5)
+- *(deps)* Bump rust-toolchain from 1.96.1 to 1.98.1 by @dependabot[bot] in [#4](https://github.com/holochain/holochain-hdi/pull/4)
+
+### First-time Contributors
+
+- @dependabot[bot] made their first contribution in [#8](https://github.com/holochain/holochain-hdi/pull/8)
+
 ## \[[0.9.0-dev.4](https://github.com/holochain/holochain-hdi/commits/v0.9.0-dev.4)\] - 2026-09-08
 
 ### Features
