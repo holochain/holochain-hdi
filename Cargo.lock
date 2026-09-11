@@ -88,12 +88,6 @@ dependencies = [
 
 [[package]]
 name = "base64"
-version = "0.22.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "72b3254f16251a8381aa12e40e3c4d2f0199f8c6508fbecb9d91f575e0fbb8c6"
-
-[[package]]
-name = "base64"
 version = "0.23.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ac07cdecf99051d9a5238b80f35af32cdeba5b336e55d957b318b50137e18da5"
@@ -736,7 +730,7 @@ checksum = "2304e00983f87ffb38b55b444b5e3b60a884b5d30c0fca7d82fe33449bbe55ea"
 name = "holo_hash"
 version = "0.9.0-dev.5"
 dependencies = [
- "base64 0.23.1",
+ "base64",
  "blake2b_simd",
  "bytes",
  "derive_more",
@@ -1070,11 +1064,11 @@ dependencies = [
 
 [[package]]
 name = "kitsune2_api"
-version = "0.5.1"
+version = "0.6.0-dev.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a5d3591317c71d8f51d19f693acbc277b9b3e9fbc46f33c3827fefc953b1b9f2"
+checksum = "58aa4427d710823762c5290357458eb73e1d419387d45d977fdd7127ce4dcd83"
 dependencies = [
- "base64 0.22.1",
+ "base64",
  "bytes",
  "futures",
  "prost",
@@ -2271,7 +2265,7 @@ version = "3.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "af5546be8f5378d5414f83733f5c9a2526f4645829edbc1c41790aeef1b38e8b"
 dependencies = [
- "base64 0.23.1",
+ "base64",
  "log",
  "percent-encoding",
  "ureq-proto",
@@ -2284,7 +2278,7 @@ version = "0.6.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "fabc3e92916c89c95b20eef7b06b00b066bc217ef9ea3a4ac9bf1a7e35261e10"
 dependencies = [
- "base64 0.23.1",
+ "base64",
  "http",
  "httparse",
  "log",
