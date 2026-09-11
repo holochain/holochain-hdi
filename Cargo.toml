@@ -35,6 +35,7 @@ holochain_timestamp = { version = "0.9.0-dev.3", path = "crates/timestamp", defa
 holochain_util = { version = "0.9.0-dev.3", path = "crates/holochain_util", default-features = false }
 
 schemars = "1.2"
+syn = "3"
 
 [workspace.lints.clippy]
 nursery = { level = "allow", priority = -1 }
