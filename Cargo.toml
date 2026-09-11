@@ -14,7 +14,7 @@ members = [
 resolver = "2"
 
 [workspace.package]
-version = "0.9.0-dev.5"
+version = "0.9.0-dev.6"
 authors = ["Holochain Core Dev Team <devcore@holochain.org>"]
 homepage = "https://www.holochain.org/"
 repository = "https://github.com/holochain/holochain-hdi"
