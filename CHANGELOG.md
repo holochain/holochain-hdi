@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## \[[0.9.0-dev.7](https://github.com/holochain/holochain-hdi/compare/v0.9.0-dev.6...v0.9.0-dev.7)\] - 2026-09-14
+
+### Features
+
+- Add direct signal grant constructor by @veeso in [#17](https://github.com/holochain/holochain-hdi/pull/17)
+
 ## \[[0.9.0-dev.6](https://github.com/holochain/holochain-hdi/compare/v0.9.0-dev.5...v0.9.0-dev.6)\] - 2026-09-11
 
 ### Miscellaneous Tasks
