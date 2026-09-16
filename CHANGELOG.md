@@ -4,6 +4,23 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## \[[0.9.0-dev.8](https://github.com/holochain/holochain-hdi/compare/v0.9.0-dev.7...v0.9.0-dev.8)\] - 2026-09-16
+
+### Bug Fixes
+
+- \[**BREAKING**\] *(holochain_integrity_types)* Remove action signer by @veeso in [#19](https://github.com/holochain/holochain-hdi/pull/19)
+  - Actions must always be signed by their author. The signer helper encoded an unsafe exception for agent migration targets and made third-party CloseChain actions appear authentic.
+  - **Breaking Change**: Action::signer is removed. Use Action::author instead.
+
+### Automated Changes
+
+- *(deps)* Bump strum from 0.27.2 to 0.28.0 by @dependabot[bot] in [#24](https://github.com/holochain/holochain-hdi/pull/24)
+- *(deps)* Bump proptest-derive from 0.5.1 to 0.8.0 by @dependabot[bot] in [#23](https://github.com/holochain/holochain-hdi/pull/23)
+- *(deps)* Bump getrandom from 0.3.4 to 0.4.3 by @dependabot[bot] in [#22](https://github.com/holochain/holochain-hdi/pull/22)
+- *(deps)* Bump strum_macros from 0.27.2 to 0.28.0 by @dependabot[bot] in [#21](https://github.com/holochain/holochain-hdi/pull/21)
+- Update dependabot.yml with shared content in [#16](https://github.com/holochain/holochain-hdi/pull/16)
+- *(deps)* Bump taiki-e/install-action in the updates group by @dependabot[bot] in [#20](https://github.com/holochain/holochain-hdi/pull/20)
+
 ## \[[0.9.0-dev.7](https://github.com/holochain/holochain-hdi/compare/v0.9.0-dev.6...v0.9.0-dev.7)\] - 2026-09-14
 
 ### Features
