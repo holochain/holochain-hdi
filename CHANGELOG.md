@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## \[[0.9.0-dev.9](https://github.com/holochain/holochain-hdi/compare/v0.9.0-dev.8...v0.9.0-dev.9)\] - 2026-09-16
+
+### Miscellaneous Tasks
+
+- *(dependabot)* Ignore `getrandom >= 0.4` by @veeso in [#26](https://github.com/holochain/holochain-hdi/pull/26)
+
+### Other Changes
+
+- Downgrade getrandom to 0.3 by @veeso
+
 ## \[[0.9.0-dev.8](https://github.com/holochain/holochain-hdi/compare/v0.9.0-dev.7...v0.9.0-dev.8)\] - 2026-09-16
 
 ### Bug Fixes
