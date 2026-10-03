@@ -150,7 +150,8 @@ macro_rules! primitive_hash_type {
             where
                 A: serde::de::SeqAccess<'de>,
             {
-                let mut vec = Vec::with_capacity(seq.size_hint().unwrap_or(0));
+                // Not `seq.size_hint()`: that is the length the input claims, unchecked.
+                let mut vec = Vec::with_capacity(crate::HOLO_HASH_PREFIX_LEN);
 
                 while let Some(b) = seq.next_element()? {
                     vec.push(b);
