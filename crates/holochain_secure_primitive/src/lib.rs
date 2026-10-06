@@ -51,7 +51,6 @@ macro_rules! fixed_array_serialization {
                 where
                     A: $crate::serde::de::SeqAccess<'de>,
                 {
-                    // Not `seq.size_hint()`: that is the length the input claims, unchecked.
                     let mut vec = Vec::with_capacity($len);
 
                     while let Some(b) = seq.next_element()? {
