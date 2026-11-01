@@ -10,7 +10,7 @@ permissions: {}
 
 jobs:
   call:
-    uses: holochain/actions/.github/workflows/publish-release.yml@832c0c654691d0ee736a12dab74832a48318fd30 # v1.18.0
+    uses: holochain/actions/.github/workflows/publish-release.yml@c973bb5ab526ff3201194d8862b59b9d3a4ce5f8 # v1.19.0
     secrets:
       HRA2_GITHUB_TOKEN: ${{ secrets.HRA2_GITHUB_TOKEN }}
       HRA2_CRATES_IO_TOKEN: ${{ secrets.HRA2_CRATES_IO_TOKEN }}
