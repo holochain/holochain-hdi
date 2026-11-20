@@ -4,6 +4,45 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## \[[0.9.0-dev.10](https://github.com/holochain/holochain-hdi/compare/v0.9.0-dev.9...v0.9.0-dev.10)\] - 2026-11-20
+
+### Features
+
+- Upgrade to holochain_wasmer 0.0.104 by @jost-s in [#39](https://github.com/holochain/holochain-hdi/pull/39)
+
+### Bug Fixes
+
+- *(holochain_secure_primitive)* Reserve only the fixed length when decoding by @zo-el
+  - Decoding a `secure_primitive!` or `fixed_array_serialization!` type, such as `Signature` or `CapSecret`, from a msgpack array reserves only its fixed length, not the length the array header declares. A five-byte header declaring 2^31 or more elements panicked with a capacity overflow on wasm32 and reserved up to 4 GiB on 64-bit targets.
+- *(holo_hash)* Decode a malformed hash without panicking or over-allocating by @zo-el
+  - Decoding a hash string that is empty, or starts with a multi-byte character, returns an error instead of panicking.
+  - Decoding a hash or hash type from a msgpack array reserves only what a valid value needs, not the length the array header declares. A five-byte header declaring 2^31 or more elements panicked with a capacity overflow on wasm32 and reserved up to 4 GiB on 64-bit targets.
+
+### Miscellaneous Tasks
+
+- Update the AI_POLICY.md with shared content in [#33](https://github.com/holochain/holochain-hdi/pull/33)
+
+### Automated Changes
+
+- *(deps)* Bump parking_lot from 0.12.5 to 0.13.0 by @dependabot[bot] in [#38](https://github.com/holochain/holochain-hdi/pull/38)
+- *(deps)* Bump proptest-derive from 0.8.0 to 0.9.0 by @dependabot[bot] in [#37](https://github.com/holochain/holochain-hdi/pull/37)
+- *(deps)* Bump the cargo-minor-patch group with 10 updates by @dependabot[bot] in [#36](https://github.com/holochain/holochain-hdi/pull/36)
+- *(deps)* Bump the updates group with 4 updates by @dependabot[bot] in [#35](https://github.com/holochain/holochain-hdi/pull/35)
+- *(deps)* Bump rust-toolchain from 1.99.0 to 1.99.1 by @dependabot[bot] in [#34](https://github.com/holochain/holochain-hdi/pull/34)
+- *(deps)* Bump taiki-e/install-action by @dependabot[bot] in [#31](https://github.com/holochain/holochain-hdi/pull/31)
+- *(deps)* Bump rust-toolchain from 1.98.1 to 1.99.0 by @dependabot[bot] in [#30](https://github.com/holochain/holochain-hdi/pull/30)
+- *(deps)* Bump the cargo-minor-patch group with 6 updates by @dependabot[bot] in [#32](https://github.com/holochain/holochain-hdi/pull/32)
+- *(deps)* Bump proptest-derive from 0.5.1 to 0.8.0 by @dependabot[bot] in [#27](https://github.com/holochain/holochain-hdi/pull/27)
+
+### Other Changes
+
+- Update crates/holochain_secure_primitive/src/lib.rs by @zo-el in [#29](https://github.com/holochain/holochain-hdi/pull/29)
+- Update crates/holo_hash/src/hash_type/primitive.rs by @zo-el
+
+### First-time Contributors
+
+- @zo-el made their first contribution in [#29](https://github.com/holochain/holochain-hdi/pull/29)
+
 ## \[[0.9.0-dev.9](https://github.com/holochain/holochain-hdi/compare/v0.9.0-dev.8...v0.9.0-dev.9)\] - 2026-09-16
 
 ### Miscellaneous Tasks
