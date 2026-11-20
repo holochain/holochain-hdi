@@ -13,7 +13,7 @@ edition = "2021"
 [dependencies]
 hdk_derive = { workspace = true }
 holo_hash = { workspace = true, features = ["hashing"] }
-holochain_wasmer_guest = "=0.0.103"
+holochain_wasmer_guest = "=0.0.104"
 holochain_serialized_bytes = "=0.0.57"
 holochain_serialized_bytes_derive = "=0.0.57"
 # it's important that we depend on holochain_integrity_types with no default
